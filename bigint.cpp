@@ -3,6 +3,13 @@
 
 using namespace std;
 
+class BigInt {
+  private:
+    bool neg;
+    int nDig;
+
+};
+
 /// Construtor default.
 /// Inicializa com um inteiro de 1 digito, valor 0 (zero).
 /// NAO PODE SER MODIFICADO
