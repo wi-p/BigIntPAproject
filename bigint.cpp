@@ -3,6 +3,7 @@
 
 using namespace std;
 
+/// Estou criando esta classe AGORA (fora do projeto)
 class BigInt {
   private:
     bool neg;
