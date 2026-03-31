@@ -1,5 +1,6 @@
 #include <iostream>
-#include "bigint.h"
+#include <cstdint>
+//#include "bigint.h"
 
 using namespace std;
 
@@ -8,6 +9,16 @@ class BigInt {
   private:
     bool neg;
     int nDig;
+    int8_t* d;
+
+  public:
+    BigInt();
+    BigInt(bool, int);
+    ~BigInt();
+    BigInt(const BigInt&);
+    bool isNeg() {return neg;}
+    int size() {return nDig;};
+    void clear();
 
 };
 
@@ -20,11 +31,22 @@ BigInt::BigInt()
   , d(new int8_t[nDig]{0})
 {}
 
-/// Destrutor
+/// Destrutor COM METODO CLEAR
 /* ACRESCENTAR */
 
+void BigInt::clear() {
+    neg = false;
+
+    delete[] d;
+}
+
 /// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
-/* ACRESCENTAR */
+BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig) {
+    if()
+}
+
+
+/*
 
 /// Construtor por copia.
 /// Delega ao construtor especifico privado.
@@ -36,65 +58,69 @@ BigInt::BigInt(const BigInt& B)
   for (int i=0; i<size(); ++i) d[i] = B.d[i];
 }
 
+
+
+
+
 /// Atribuicao por copia
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// Construtor por movimento
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// Atribuicao por movimento
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// Construtor especifico a partir de inteiro longo.
 /// Tambem conversor de long long int para BigInt.
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
-/// NAS PARTES INDICADAS POR /* ACRESCENTAR */
+/// NAS PARTES INDICADAS POR  ACRESCENTAR
 BigInt::BigInt(long long int N)
-  /* ACRESCENTAR */
+  /// ACRESCENTAR
 {
-  // Calcula os digitos, usando divisao inteira por 10
+  /// Calcula os digitos, usando divisao inteira por 10
   for (int i=0; i<size(); ++i)
   {
-    d[i] = abs(N%10); // Modulo do resto da divisao
-    N /= 10;          // Divisao inteira
+    d[i] = abs(N%10); /// Modulo do resto da divisao
+    N /= 10;          /// Divisao inteira
   }
 }
 
 /// Conversor de BigInt para long long int
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 1 *
 /// ******************
 
 /// Funcao privada que corrige o numero, caso haja inconsistencias
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// Construtor especifico a partir de string.
 /// Nao eh conversor de string para BigInt.
 /// Delega ao construtor default.
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
-/// NAS PARTES INDICADAS POR /* ACRESCENTAR */
+/// NAS PARTES INDICADAS POR  ACRESCENTAR
 BigInt::BigInt(const string& S)
-  : BigInt() // Valor inicial zero
+  : BigInt() /// Valor inicial zero
 {
-  // Se string vazia, emite erro e permanece com valor inicial zero
+  /// Se string vazia, emite erro e permanece com valor inicial zero
   if (S.empty())
   {
     cerr << "empty string cannot create a BigInt\n";
     return;
   }
 
-  // Posicao onde comecam os digitos, inicialmente zero
+  /// Posicao onde comecam os digitos, inicialmente zero
   size_t ini=0;
-  // Leva em conta o sinal
+  /// Leva em conta o sinal
   bool IsNeg = false;
 
   if (S[0]=='+' || S[0]=='-')
   {
-    // Se nao tem nenhum digito alem do sinal, emite erro e permanece com valor inicial
+    /// Se nao tem nenhum digito alem do sinal, emite erro e permanece com valor inicial
     if (S.size()==1)
     {
       cerr << "sign-only string cannot create a BigInt\n";
@@ -104,22 +130,22 @@ BigInt::BigInt(const string& S)
     ++ini;
   }
 
-  // Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
-  /* ACRESCENTAR */
+  /// Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
+  /// ACRESCENTAR
 
-  // Calculo dos digitos do BigInt
+  /// Calculo dos digitos do BigInt
   for (int i=0; i<size(); ++i)
   {
     char c = S[S.size()-1-i];
     if (!isdigit(c))
     {
-      *this = BigInt(); // = 0
+      *this = BigInt(); /// = 0
       cerr << "string with invalid character cannot create a BigInt\n";
       return;
     }
     d[i] = static_cast<int8_t>(c-'0');
   }
-  // Corrige eventuais numeros fora da especificacao
+  /// Corrige eventuais numeros fora da especificacao
   correct();
 }
 
@@ -128,71 +154,71 @@ BigInt::BigInt(const string& S)
 /// ******************
 
 /// Insercao (impressao)
-/* ACRESCENTAR */
+/// ACRESCENTAR
 
 /// Extracao (digitacao).
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
-/// NAS PARTES INDICADAS POR /* ACRESCENTAR */
+/// NAS PARTES INDICADAS POR  ACRESCENTAR
 std::istream& operator>>(istream& I, BigInt& B)
 {
-  // Valor inicial zero
-  B = BigInt(); // = 0
+  /// Valor inicial zero
+  B = BigInt(); /// = 0
 
-  // Testa a stream de entrada e descarta eventuais separadores iniciais.
-  // Em caso de erro, encerra a digitacao.
+  /// Testa a stream de entrada e descarta eventuais separadores iniciais.
+  /// Em caso de erro, encerra a digitacao.
   istream::sentry s(I);
   is (!s) return I;
 
-  // Caractere lido da stream
+  /// Caractere lido da stream
   int c;
 
-  // Inspeciona o primeiro caractere que serah lido
+  /// Inspeciona o primeiro caractere que serah lido
   c = I.peek();
 
-  // Testa se o primeiro caractere eh um sinal.
-  // Se for, consome (elimina do buffer), processa e inspeciona o proximo caractere.
+  /// Testa se o primeiro caractere eh um sinal.
+  /// Se for, consome (elimina do buffer), processa e inspeciona o proximo caractere.
   if (c=='+' || c=='-')
   {
-    // Consome
+    /// Consome
     c = I.get();
-    // Atribui o sinal
+    /// Atribui o sinal
     B.neg = (c=='-');
-    // Obtem o proximo caractere
+    /// Obtem o proximo caractere
     c = I.peek();
   }
 
-  // Numero de digitos que foram digitados
+  /// Numero de digitos que foram digitados
   int numDigitos = 0;
 
-  // Testa se eh um caractere valido: digitos 0 a 9
+  /// Testa se eh um caractere valido: digitos 0 a 9
   while (isdigit(c))
   {
-    // Consome do buffer
+    /// Consome do buffer
     c = I.get();
     ++numDigitos;
 
     if (numDigitos>1)
     {
-      // Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
-      // avancando todos para uma posicao mais significativa aa frente.
-      /* ACRESCENTAR */
+      /// Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
+      /// avancando todos para uma posicao mais significativa aa frente.
+      /// ACRESCENTAR
     }
 
-    // Acrescenta o novo digito como sendo o primeiro (o menos significativo)
+    /// Acrescenta o novo digito como sendo o primeiro (o menos significativo)
     B.d[0] = static_cast<int8_t>(c-'0');
 
-    // Inspeciona o proximo caractere que vai ser lido
+    /// Inspeciona o proximo caractere que vai ser lido
     c = I.peek();
   }
 
-  // Assinala erro na stream se nenhum digito foi lido
+  /// Assinala erro na stream se nenhum digito foi lido
   if (numDigitos==0) I.setstate(ios::failbit);
 
-  // Corrige eventuais erros na digitacao
+  /// Corrige eventuais erros na digitacao
   B.correct();
 
-  // Encerra a digitacao
+  /// Encerra a digitacao
   return I;
 }
 
@@ -201,20 +227,20 @@ std::istream& operator>>(istream& I, BigInt& B)
 /// ******************
 
 /// Teste de igualdade
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Menor que
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 4 *
 /// ******************
 
 /// Funcao privada que incrementa os digitos (o modulo) do numero
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Funcao privada que decrementa os digitos (o modulo) do numero
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Operador de incremento pre-fixado
 /// NAO PODE SER MODIFICADO
@@ -235,54 +261,56 @@ BigInt& BigInt::operator--()
 }
 
 /// Operador de incremento pos-fixado
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Operador de decremento pos-fixado
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 5 *
 /// ******************
 
 /// Modulo (abs)
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Negativo (unario)
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Soma
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 6 *
 /// ******************
 
 /// Multiplicacao
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Fatorial
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 7 *
 /// ******************
 
 /// Deslocamento aa esquerda
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Deslocamento ah direita
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Divisao de *this por D.
 /// Armazena o resultado (quociente) em Q e o resto da divisao em R.
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Quociente da divisao inteira
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// Resto da divisao inteira
-/* ACRESCENTAR */
+///* ACRESCENTAR
 
 /// ******************
 /// * FIM DA PARTE 8 *
 /// ******************
+
+*/
