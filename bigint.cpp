@@ -19,32 +19,30 @@ BigInt::BigInt()
 BigInt::~BigInt() {clear();}
 
 void BigInt::clear() {
-    neg = false;
-    nDig = 0;
-
     delete[] d;
 }
 
 /// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
-BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig) {
-
+BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig >= 1 ? unDig : 1), d(new int8_t[nDig]{0}) {
+	
 }
 
-
-/*
+int main(void) {
+	
+    return 0;
+}
 
 /// Construtor por copia.
 /// Delega ao construtor especifico privado.
 /// NAO PODE SER MODIFICADO.
-BigInt::BigInt(const BigInt& B)
-  : BigInt(B.isNeg(), B.size())
+BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
 {
   // Copia os digitos
   for (int i=0; i<size(); ++i) d[i] = B.d[i];
 }
 
 
-
+/*
 
 
 /// Atribuicao por copia
@@ -300,6 +298,3 @@ BigInt& BigInt::operator--()
 
 */
 
-int main(void) {
-    return 0;
-}
