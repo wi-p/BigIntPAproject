@@ -1,26 +1,8 @@
 #include <iostream>
 #include <cstdint>
-//#include "bigint.h"
+#include "bigint.h"
 
 using namespace std;
-
-/// Estou criando esta classe AGORA (fora do projeto)
-class BigInt {
-  private:
-    bool neg;
-    int nDig;
-    int8_t* d;
-
-  public:
-    BigInt();
-    BigInt(bool, int);
-    ~BigInt();
-    BigInt(const BigInt&);
-    bool isNeg() {return neg;}
-    int size() {return nDig;};
-    void clear();
-
-};
 
 /// Construtor default.
 /// Inicializa com um inteiro de 1 digito, valor 0 (zero).
@@ -34,15 +16,18 @@ BigInt::BigInt()
 /// Destrutor COM METODO CLEAR
 /* ACRESCENTAR */
 
+BigInt::~BigInt() {clear();}
+
 void BigInt::clear() {
     neg = false;
+    nDig = 0;
 
     delete[] d;
 }
 
 /// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
 BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig) {
-    if()
+
 }
 
 
@@ -314,3 +299,7 @@ BigInt& BigInt::operator--()
 /// ******************
 
 */
+
+int main(void) {
+    return 0;
+}
