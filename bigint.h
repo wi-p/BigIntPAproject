@@ -6,13 +6,13 @@
 /// Estou criando esta classe AGORA (fora do projeto)
 class BigInt {
   private:
+  	BigInt(bool, int);
     bool neg;
     int nDig;
     int8_t* d;
 
   public:
     BigInt();
-    BigInt(bool, int);
     ~BigInt();
     BigInt(const BigInt&);
     bool isNeg() {return neg;}
