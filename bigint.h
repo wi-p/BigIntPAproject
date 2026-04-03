@@ -17,6 +17,7 @@ class BigInt {
     BigInt(const BigInt& bi);
     bool isNeg() const {return neg;}
     int size() const {return nDig;};
+    bool () const;
     void clear();
 };
 

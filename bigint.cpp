@@ -4,6 +4,11 @@
 
 using namespace std;
 
+// FUNCOES QUE NAO SAO CONSTRUTORAS
+bool BigInt::() const {
+
+}
+
 /// Construtor default.
 /// Inicializa com um inteiro de 1 digito, valor 0 (zero).
 /// NAO PODE SER MODIFICADO
@@ -27,12 +32,6 @@ BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig >= 1 ? unDig : 1), 
 	
 }
 
-int main(void) {
-	
-	BigInt bi(false, 2);
-	
-    return 0;
-}
 
 /// Construtor por copia.
 /// Delega ao construtor especifico privado.
@@ -43,6 +42,17 @@ BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
   for (int i=0; i<size(); ++i) d[i] = B.d[i];
 }
 
+// O PROJETO NÃO ESTÁ USANDO O CONSTRUTOR PRIVADO
+// E NÃO FAZ COPIA
+int main(void) {
+	
+	BigInt bi;
+	BigInt a = bi;
+	
+	cout << a.size();
+	
+    return 0;
+}
 
 /*
 
