@@ -14,11 +14,10 @@ class BigInt {
   public:
     BigInt();
     ~BigInt();
-    BigInt(const BigInt&);
-    bool isNeg() {return neg;}
-    int size() {return nDig;};
+    BigInt(const BigInt& bi);
+    bool isNeg() const {return neg;}
+    int size() const {return nDig;};
     void clear();
-
 };
 
 #endif

@@ -29,6 +29,8 @@ BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig >= 1 ? unDig : 1), 
 
 int main(void) {
 	
+	BigInt bi(false, 2);
+	
     return 0;
 }
 
