@@ -1,13 +1,12 @@
 #include <iostream>
 #include <cstdint>
+#include <cmath>
 #include "bigint.h"
 
 using namespace std;
 
 // FUNCOES QUE NAO SAO CONSTRUTORAS
-bool BigInt::() const {
 
-}
 
 /// Construtor default.
 /// Inicializa com um inteiro de 1 digito, valor 0 (zero).
@@ -18,7 +17,7 @@ BigInt::BigInt()
   , d(new int8_t[nDig]{0})
 {}
 
-/// Destrutor COM METODO CLEAR
+/// Destrutor 
 /* ACRESCENTAR */
 
 BigInt::~BigInt() {clear();}
@@ -28,10 +27,10 @@ void BigInt::clear() {
 }
 
 /// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
-BigInt::BigInt(bool uneg, int unDig) : neg(uneg), nDig(unDig >= 1 ? unDig : 1), d(new int8_t[nDig]{0}) {
+BigInt::BigInt(bool uneg, int unDig) : 
+neg(uneg), nDig(unDig >= 1 ? unDig : 1), d(new int8_t[nDig]{0}) {
 	
 }
-
 
 /// Construtor por copia.
 /// Delega ao construtor especifico privado.
@@ -41,21 +40,6 @@ BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
   // Copia os digitos
   for (int i=0; i<size(); ++i) d[i] = B.d[i];
 }
-
-// O PROJETO NÃO ESTÁ USANDO O CONSTRUTOR PRIVADO
-// E NÃO FAZ COPIA
-int main(void) {
-	
-	BigInt bi;
-	BigInt a = bi;
-	
-	cout << a.size();
-	
-    return 0;
-}
-
-/*
-
 
 /// Atribuicao por copia
 /// ACRESCENTAR
@@ -71,7 +55,8 @@ int main(void) {
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
 /// NAS PARTES INDICADAS POR  ACRESCENTAR
-BigInt::BigInt(long long int N)
+BigInt::BigInt(long long int N) : 
+neg(N < 0 ? true : false), nDig(N = 0 ? 1 : (1 + int(log10(fabs(N)))))
   /// ACRESCENTAR
 {
   /// Calcula os digitos, usando divisao inteira por 10
@@ -81,6 +66,13 @@ BigInt::BigInt(long long int N)
     N /= 10;          /// Divisao inteira
   }
 }
+
+int main() {
+	
+	return 0;
+}
+
+/*
 
 /// Conversor de BigInt para long long int
 /// ACRESCENTAR
