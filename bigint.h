@@ -26,6 +26,9 @@ class BigInt {
     void clear();
     int getIndex(int i) const {return d[i];}
     
+    // funcoes diversas
+    long long int toInt();
+    
     // operadores
     int operator[](int i) const {return (i >= this -> size() || i < 0 ? 0 : int(this->getIndex(i)));}
     

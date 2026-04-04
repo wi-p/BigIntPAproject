@@ -72,10 +72,14 @@ int main() {
 	return 0;
 }
 
-/*
+
 
 /// Conversor de BigInt para long long int
-/// ACRESCENTAR
+long long int toInt() {
+	
+}
+
+/*
 
 /// ******************
 /// * FIM DA PARTE 1 *
