@@ -42,10 +42,15 @@ BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
 }
 
 /// Atribuicao por copia
-/// ACRESCENTAR
+const BigInt& BigInt::operator=(const BigInt& P) {
+	if(&P == this) return *this;
+}
 
 /// Construtor por movimento
-/// ACRESCENTAR
+BigInt::BigInt(BigInt&& temp) noexcept : neg(temp.neg), nDig(temp.nDig), d(temp.d) {
+	temp.nDig = -1;
+	temp.d = nullptr;
+}
 
 /// Atribuicao por movimento
 /// ACRESCENTAR
@@ -56,7 +61,7 @@ BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
 /// NAS PARTES INDICADAS POR  ACRESCENTAR
 BigInt::BigInt(long long int N) : 
-neg(N < 0 ? true : false), nDig(N = 0 ? 1 : (1 + int(log10(fabs(N)))))
+neg(N < 0 ? true : false), nDig(N == 0 ? 1 : (1 + int(log10(fabs(N)))))
   /// ACRESCENTAR
 {
   /// Calcula os digitos, usando divisao inteira por 10
@@ -75,8 +80,22 @@ int main() {
 
 
 /// Conversor de BigInt para long long int
-long long int toInt() {
+long long int BigInt::toInt() {
+	int val = 0;
 	
+	for(int i = this -> size() -1; i < 0; i-- ) {
+		val = 10 * val + this -> d[i];
+		
+		if (val < 0) {
+			cout << "Erro";
+			
+			return 0;
+		}
+	}
+	
+	if (this -> isNeg()) val = -val;
+	
+	return val;
 }
 
 /*

@@ -17,6 +17,8 @@ class BigInt {
     ~BigInt();
     BigInt(const BigInt& bi);
     BigInt(long long int);
+    BigInt(const BigInt&);
+    BigInt(BigInt&&) noexcept;
     
     //funcoes de get/set
     bool isNeg() const {return neg;}
