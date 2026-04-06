@@ -1,11 +1,15 @@
 
 
+
 // arquivo bigint.h
 #ifndef _BIGINT_H_
 #define _BIGINT_H_
 
 #include <iostream>
 #include <cstdint>
+#include <string>
+
+using namespace std;
 
 /// Classe BigInt
 class BigInt {
@@ -23,6 +27,8 @@ class BigInt {
     BigInt(const BigInt&);
     BigInt(long long int);
     BigInt(BigInt&&) noexcept;
+    BigInt(const string& S);   
+    
     
     //funcoes de get/set
     bool isNeg() const {return neg;}
@@ -39,8 +45,9 @@ class BigInt {
     int operator[](int i) const {return (i >= this -> size() || i < 0 ? 0 : int(this->getIndex(i)));}
     const BigInt& operator=(const BigInt&);
     const BigInt& operator=(BigInt&&) noexcept;
-    
+    friend ostream& operator<<(ostream&, BigInt);
+   
 };
 
-#endif
 
+#endif
