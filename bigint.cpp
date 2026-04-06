@@ -199,20 +199,22 @@ BigInt::BigInt(const string& S)
 /// ******************
 
 /// Insercao (impressao)
-
-ostream& operator<<(ostream& s, BigInt& P) {
+ostream& operator<<(ostream& s, const BigInt& P) {
 	if(P.isNeg()) s << '-';
 	
-	for(int i = P.size() -1; i >= 0; i--) s << P[i];
+	for(int i = P.size() -1; i >= 0; i--) s << static_cast<int>(P.getIndex(i));
 	
 	return s;
 }
 
 int main() {
-	BigInt n("56");
+	BigInt n("-56");
+	
+	cout << n;
+	
+	return 0;
 }
 
-/*
 /// Extracao (digitacao).
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
@@ -278,6 +280,8 @@ std::istream& operator>>(istream& I, BigInt& B)
   /// Encerra a digitacao
   return I;
 }
+
+/*
 
 /// ******************
 /// * FIM DA PARTE 3 *
