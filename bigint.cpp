@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cmath>
 #include "bigint.h"
+#include <string>
 
 using namespace std;
 
@@ -124,20 +125,21 @@ long long int BigInt::toInt() {
 /// Funcao privada que corrige o numero, caso haja inconsistencias
 /// ACRESCENTAR
 void BigInt::correct() {
-	newSize = size();
+	int newSize = size();
 	
-	while (newSize > 1 && d[newSize - 1] == 0) newSize = newSize - 1
+	while (newSize > 1 && d[newSize - 1] == 0) newSize = newSize - 1;
 	if (newSize != size()) {
-		int arr[newSize];
-		for(int i = 0; i < newSize; i++) arr[i] = d[i]
+		BigInt temp(neg, newSize);
 		
-		*this = BigInt(neg, newSize);
-		*this.d = arr;
+		for(int i = 0; i < newSize; i++) temp.d[i] = d[i];
+		
+		*this = move(temp);
+		
 	} 
 	if (isZero()) neg = false;
 }
 
-/*
+
 /// Construtor especifico a partir de string.
 /// Nao eh conversor de string para BigInt.
 /// Delega ao construtor default.
@@ -172,7 +174,7 @@ BigInt::BigInt(const string& S)
   }
 
   /// Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
-  /// ACRESCENTAR
+  *this = BigInt(IsNeg, S.size() - ini);
 
   /// Calculo dos digitos do BigInt
   for (int i=0; i<size(); ++i)
@@ -190,13 +192,27 @@ BigInt::BigInt(const string& S)
   correct();
 }
 
+
+
 /// ******************
 /// * FIM DA PARTE 2 *
 /// ******************
 
 /// Insercao (impressao)
-/// ACRESCENTAR
 
+ostream& operator<<(ostream& s, BigInt& P) {
+	if(P.isNeg()) s << '-';
+	
+	for(int i = P.size() -1; i >= 0; i--) s << P[i];
+	
+	return s;
+}
+
+int main() {
+	BigInt n("56");
+}
+
+/*
 /// Extracao (digitacao).
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
@@ -355,4 +371,3 @@ BigInt& BigInt::operator--()
 /// ******************
 
 */
-
