@@ -9,8 +9,6 @@
 #include <cstdint>
 #include <string>
 
-using namespace std;
-
 /// Classe BigInt
 class BigInt {
   private:
@@ -27,7 +25,7 @@ class BigInt {
     BigInt(const BigInt&);
     BigInt(long long int);
     BigInt(BigInt&&) noexcept;
-    BigInt(const string& S);   
+    BigInt(const std::string& S);   
     
     
     //funcoes de get/set
@@ -45,7 +43,10 @@ class BigInt {
     int operator[](int i) const {return (i >= this -> size() || i < 0 ? 0 : int(this->getIndex(i)));}
     const BigInt& operator=(const BigInt&);
     const BigInt& operator=(BigInt&&) noexcept;
-    friend ostream& operator<<(ostream&, BigInt);
+    
+    friend std::ostream& operator<<(std::ostream&, const BigInt&);
+    friend std::istream& operator>>(std::istream&, BigInt&)
+    
    
 };
 
