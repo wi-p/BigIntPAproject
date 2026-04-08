@@ -1,6 +1,3 @@
-
-
-// arquivo bigint.cpp
 #include <iostream>
 #include <cstdint>
 #include <cmath>
@@ -21,19 +18,21 @@ BigInt::BigInt()
   , d(new int8_t[nDig]{0})
 {}
 
-/// Destrutor 
+/// Destrutor
 /* ACRESCENTAR */
 
 BigInt::~BigInt() {clear();}
 
 void BigInt::clear() {
     delete[] d;
+    d = nullptr;
+    nDig = 0;
 }
 
 /// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
-BigInt::BigInt(bool uneg, int unDig) : 
+BigInt::BigInt(bool uneg, int unDig) :
 neg(uneg), nDig(unDig >= 1 ? unDig : 1), d(new int8_t[nDig]{0}) {
-	
+
 }
 
 /// Construtor por copia.
@@ -48,14 +47,14 @@ BigInt::BigInt(const BigInt& B) : BigInt(B.isNeg(), B.size())
 /// Atribuicao por copia
 const BigInt& BigInt::operator=(const BigInt& P) {
 	if(&P == this) return *this;
-	
+
 	delete[] d;
 	nDig = P.nDig;
 	neg = P.neg;
 	d = new int8_t[nDig];
-	
+
 	for (int i = 0; i < size(); ++i) d[i] = P.d[i];
-	
+
 	return *this;
 }
 
@@ -68,16 +67,16 @@ BigInt::BigInt(BigInt&& temp) noexcept : neg(temp.neg), nDig(temp.nDig), d(temp.
 /// Atribuicao por movimento
 const BigInt& BigInt::operator=(BigInt&& temp) noexcept {
 	if (&temp == this) return *this;
-	
+
 	delete[] d;
-	
+
 	d = temp.d;
 	nDig = temp.nDig;
 	neg = temp.neg;
-	
+
 	temp.d = nullptr;
 	temp.nDig = 0;
-	
+
 	return *this;
 }
 
@@ -86,10 +85,10 @@ const BigInt& BigInt::operator=(BigInt&& temp) noexcept {
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
 /// NAS PARTES INDICADAS POR  ACRESCENTAR
-BigInt::BigInt(long long int N) : 
+BigInt::BigInt(long long int N) :
 neg(N < 0), nDig(N == 0 ? 1 : (1 + int(log10(fabs(N))))), d(new int8_t[nDig]{0})
 {
-  
+
   /// Calcula os digitos, usando divisao inteira por 10
   for (int i=0; i<size(); ++i)
   {
@@ -102,19 +101,19 @@ neg(N < 0), nDig(N == 0 ? 1 : (1 + int(log10(fabs(N))))), d(new int8_t[nDig]{0})
 /// Conversor de BigInt para long long int
 long long int BigInt::toInt() {
 	long long int val = 0;
-	
+
 	for(int i = this -> size() -1; i >= 0; i-- ) {
 		val = 10 * val + this -> d[i];
-		
+
 		if (val < 0) {
 			cout << "Erro";
-			
+
 			return 0;
 		}
 	}
-	
+
 	if (this -> isNeg()) val = -val;
-	
+
 	return val;
 }
 
@@ -126,16 +125,16 @@ long long int BigInt::toInt() {
 /// ACRESCENTAR
 void BigInt::correct() {
 	int newSize = size();
-	
+
 	while (newSize > 1 && d[newSize - 1] == 0) newSize = newSize - 1;
 	if (newSize != size()) {
 		BigInt temp(neg, newSize);
-		
+
 		for(int i = 0; i < newSize; i++) temp.d[i] = d[i];
-		
+
 		*this = move(temp);
-		
-	} 
+
+	}
 	if (isZero()) neg = false;
 }
 
@@ -201,18 +200,10 @@ BigInt::BigInt(const string& S)
 /// Insercao (impressao)
 ostream& operator<<(ostream& s, const BigInt& P) {
 	if(P.isNeg()) s << '-';
-	
-	for(int i = P.size() -1; i >= 0; i--) s << static_cast<int>(P.getIndex(i));
-	
-	return s;
-}
 
-int main() {
-	BigInt n("-56");
-	
-	cout << n;
-	
-	return 0;
+	for(int i = P.size() -1; i >= 0; i--) s << static_cast<int>(P.getIndex(i));
+
+	return s;
 }
 
 /// Extracao (digitacao).
@@ -227,7 +218,7 @@ std::istream& operator>>(istream& I, BigInt& B)
   /// Testa a stream de entrada e descarta eventuais separadores iniciais.
   /// Em caso de erro, encerra a digitacao.
   istream::sentry s(I);
-  is (!s) return I;
+  if(!s) return I;
 
   /// Caractere lido da stream
   int c;
@@ -262,6 +253,11 @@ std::istream& operator>>(istream& I, BigInt& B)
       /// Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
       /// avancando todos para uma posicao mais significativa aa frente.
       /// ACRESCENTAR
+      BigInt temp = BigInt(B.neg, B.nDig + 1);
+
+      for (int i = 0; i < B.nDig; i++) temp.d[i + 1] = B.d[i];
+
+      B = temp;
     }
 
     /// Acrescenta o novo digito como sendo o primeiro (o menos significativo)
@@ -281,7 +277,7 @@ std::istream& operator>>(istream& I, BigInt& B)
   return I;
 }
 
-/*
+
 
 /// ******************
 /// * FIM DA PARTE 3 *
@@ -289,9 +285,52 @@ std::istream& operator>>(istream& I, BigInt& B)
 
 /// Teste de igualdade
 ///* ACRESCENTAR
+bool BigInt::operator==(const BigInt& B) const {
+	if( (isNeg() == B.isNeg()) &&  (size() == B.size()) ) {
+		for(int i = size(); i >= 0; i-- ) {
+			if (d[i] != B.d[i]) return false;
+		}
+	}
+
+	return true;
+}
+
+bool BigInt::operator!=(const BigInt& B) const {
+	return !operator==(B);
+}
 
 /// Menor que
 ///* ACRESCENTAR
+bool BigInt::operator<(const BigInt& B) const {
+	if (isNeg() != B.isNeg()) return isNeg();
+
+	if (!isNeg()) {
+		if (size() != B.size()) return (size() < B.size());
+
+		for(int i = size() - 1; i > 0; i--) {
+			if (getIndex(i) != B.getIndex(i)) return (getIndex(i) < B.getIndex(i));
+		}
+	} else {
+		if (size() != B.size()) return (size() > B.size());
+
+		for(int i = size() - 1; i > 0; i--) if (getIndex(i) != B.getIndex(i)) return getIndex(i) > B.getIndex(i);
+
+	}
+}
+
+bool BigInt::operator>(const BigInt& B) const {
+	return B.operator<(*this);
+}
+
+bool BigInt::operator>=(const BigInt& B) const {
+	return !operator<(B);
+}
+
+bool BigInt::operator<=(const BigInt& B) const {
+	return !B.operator<(*this);
+}
+
+
 
 /// ******************
 /// * FIM DA PARTE 4 *
@@ -300,8 +339,43 @@ std::istream& operator>>(istream& I, BigInt& B)
 /// Funcao privada que incrementa os digitos (o modulo) do numero
 ///* ACRESCENTAR
 
+void BigInt::increment() {
+	int k(0);
+
+	while (k < size() && d[k] == 9) {
+		d[k] = 0;
+		k = k + 1;
+	}
+
+	if (k < size()) d[k] = d[k] + 1;
+	else {
+		BigInt temp(isNeg(), size() + 1);
+
+		for(int i = 0; i <= temp.size(); i++) (i == temp.size() ? temp.d[i] = 1 : temp.d[i] = 0);
+	}
+}
+
 /// Funcao privada que decrementa os digitos (o modulo) do numero
 ///* ACRESCENTAR
+
+void BigInt::decrement() {
+	if (isZero()) {
+		d[0] = -1;
+		return;
+	}
+
+	int k(0);
+
+	while (k < size() && d[k] == 0) {
+		d[k] = 9;
+		k += 1;
+	}
+
+	d[k] -= -1;
+
+	if (d[size() - 1] == 0) correct();
+}
+
 
 /// Operador de incremento pre-fixado
 /// NAO PODE SER MODIFICADO
@@ -321,11 +395,25 @@ BigInt& BigInt::operator--()
   return *this;
 }
 
-/// Operador de incremento pos-fixado
-///* ACRESCENTAR
+BigInt BigInt::operator++(int) {
+	BigInt cop = BigInt(neg, nDig);
 
-/// Operador de decremento pos-fixado
-///* ACRESCENTAR
+	for (int i = 0; i < nDig; i++) cop.d[i] = d[i];
+
+	++(*this);
+
+	return cop;
+}
+
+BigInt BigInt::operator--(int) {
+    BigInt cop = BigInt(neg, nDig);
+    for (int i = 0; i < nDig; i++) cop.d[i] = d[i];
+
+    --(*this);
+
+    return cop;
+}
+
 
 /// ******************
 /// * FIM DA PARTE 5 *
@@ -339,6 +427,8 @@ BigInt& BigInt::operator--()
 
 /// Soma
 ///* ACRESCENTAR
+
+/*
 
 /// ******************
 /// * FIM DA PARTE 6 *

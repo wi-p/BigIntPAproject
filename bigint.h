@@ -1,7 +1,3 @@
-
-
-
-// arquivo bigint.h
 #ifndef _BIGINT_H_
 #define _BIGINT_H_
 
@@ -11,9 +7,13 @@
 
 /// Classe BigInt
 class BigInt {
-  private:
+  private: // Metodos privados
     BigInt(bool, int);
-  	void correct();
+    void correct();
+    void increment();
+    void decrement();
+
+  private: // Atributos
     bool neg;
     int nDig;
     int8_t* d;
@@ -25,9 +25,9 @@ class BigInt {
     BigInt(const BigInt&);
     BigInt(long long int);
     BigInt(BigInt&&) noexcept;
-    BigInt(const std::string& S);   
-    
-    
+    BigInt(const std::string& S);
+
+
     //funcoes de get/set
     bool isNeg() const {return neg;}
     void setNeg(bool value) {neg = 	value;}
@@ -35,19 +35,34 @@ class BigInt {
     bool isZero() const {return (nDig == 1 && d[0] == 0 ? true : false);};
     void clear();
     int getIndex(int i) const {return d[i];}
-    
+    void setNDig(int i) {nDig += i;}
+
     // funcoes diversas
     long long int toInt();
-    
+
     // operadores
     int operator[](int i) const {return (i >= this -> size() || i < 0 ? 0 : int(this->getIndex(i)));}
-    const BigInt& operator=(const BigInt&);
+
+	const BigInt& operator=(const BigInt&);
     const BigInt& operator=(BigInt&&) noexcept;
-    
+
+    bool operator==(const BigInt&) const;
+    bool operator!=(const BigInt&) const;
+    bool operator<(const BigInt&) const;
+    bool operator>(const BigInt&) const;
+    bool operator>=(const BigInt&) const;
+    bool operator<=(const BigInt&) const;
+
+    BigInt& operator++();
+    BigInt& operator--();
+
+    BigInt operator++(int);
+    BigInt operator--(int);
+
     friend std::ostream& operator<<(std::ostream&, const BigInt&);
-    friend std::istream& operator>>(std::istream&, BigInt&)
-    
-   
+    friend std::istream& operator>>(std::istream&, BigInt&);
+
+
 };
 
 
