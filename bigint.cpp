@@ -1,0 +1,203 @@
+#include "header/bigint.h"
+#include <cmath>
+#include <string>
+#include <iostream>
+/* ACRESCENTAR */
+/*
+PAREI EM:
+ Um construtor que cria um BigInt a partir de
+uma string.
+*/
+
+
+using namespace std;
+
+/// Construtor default.
+/// Inicializa com um inteiro de 1 digito, valor 0 (zero).
+/// NAO PODE SER MODIFICADO
+BigInt::BigInt()
+  : neg(false)
+  , nDig(1)
+  , d(new int8_t[1]{0})
+{}
+
+/// Destrutor
+BigInt::~BigInt() { // destrutor
+    delete[] d;
+}
+
+/// Construtor especifico PRIVADO que recebe o sinal e a quantidade de digitos
+BigInt::BigInt(bool IsNeg, int size):
+	neg(IsNeg),
+	nDig( size >= 1? size:1),
+	d(new int8_t[nDig]{0}) // cria array com nDig valores inteiros (todos 0)
+{}
+
+/// Construtor por copia.
+/// Delega ao construtor especifico privado.
+/// NAO PODE SER MODIFICADO.
+BigInt::BigInt(const BigInt& B)
+  : BigInt(B.isNeg(), B.size())
+{
+  // Copia os digitos
+  for (int i=0; i<size(); ++i) d[i] = B.d[i];
+}
+
+/// Atribuicao por copia
+BigInt& BigInt::operator=(const BigInt& B) {
+  // se os valores passados forem iguais, trata-se do mesmo
+  // objeto, entao so retornar ele mesmo e nao precisa copiar
+  if (this == &B) return *this;
+
+  if (this->nDig != B.nDig) { // verifica se tem mesmo tamanho
+    delete[] d;
+    nDig = B.nDig;
+
+    this->d = new int8_t[nDig]; // aloca memoria
+  }
+
+  for (int i = 0; i < nDig; ++i) d[i] = B.d[i]; // copia elementos
+
+  return *this; // retorna objeto (desreferenciado)
+
+}
+
+/// Construtor por movimento
+BigInt::BigInt(BigInt&& B) noexcept:
+	neg(B.neg),
+	nDig(B.nDig),
+	d(B.d)
+{
+	B.nDig = 0;
+	B.d = nullptr;
+}
+
+/// Atribuicao por movimento
+const BigInt& BigInt::operator=(BigInt&& B) noexcept {
+    if (this == &B) return *this;
+
+    delete[] d; // libera o espaco anterior
+
+    // copia os elementos para o referido BigInt
+    this->neg = B.neg;
+    this->nDig = B.nDig;
+    this->d = B.d;
+
+    // limpa o BigInt temporario
+    B.nDig = 0;
+    B.d = nullptr;
+
+    return *this;
+}
+
+/// Funcoes de consulta
+
+
+/// Construtor especifico a partir de inteiro longo.
+/// Tambem conversor de long long int para BigInt.
+/// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
+/// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
+/// NAS PARTES INDICADAS POR /* ACRESCENTAR */
+BigInt::BigInt(long long int N):
+    BigInt(
+		(N < 0? true: false), // sinal do BigInt
+		(N == 0? 1: 1 + int(log10(fabs(N))))  // numero de digitos
+	)
+{
+  // Calcula os digitos, usando divisao inteira por 10
+  for (int i=0; i<size(); ++i)
+  {
+    d[i] = abs(N%10); // Modulo do resto da divisao
+    N /= 10;          // Divisao inteira
+  }
+}
+
+/// Conversor de BigInt para long long int
+/* ACRESCENTAR */
+long long int BigInt::toInt() {
+	int val = 0;
+
+	for (int i = size() -1; i >= 0; --i) {
+		val = 10 * val + d[i];
+
+		if (val < 0) {
+			std::cerr << "Erro, numero muito grande";
+			return 0;
+		}
+	}
+
+	if (isNeg()) val = - val;
+
+	return val;
+}
+
+/// ******************
+/// * FIM DA PARTE 1 *
+/// ******************
+
+/// Funcao privada que corrige o numero, caso haja inconsistencias
+BigInt::correct() {
+    int newSize = size();
+
+    while (newSize > 1 && d[newSize - 1] == 0) newSize -= 1;
+
+    if (newSize != size()) nDig = newSize;
+
+    if (isZero()) neg = false;
+}
+
+/// Construtor especifico a partir de string.
+/// Nao eh conversor de string para BigInt.
+/// Delega ao construtor default.
+/// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
+/// PODE (E PRECISA) RECEBER ACRESCIMOS, APENAS
+/// NAS PARTES INDICADAS POR /* ACRESCENTAR */
+BigInt::BigInt(const string& S)
+  : BigInt() // Valor inicial zero
+{
+  // Se string vazia, emite erro e permanece com valor inicial zero
+  if (S.empty())
+  {
+    cerr << "empty string cannot create a BigInt\n";
+    return;
+  }
+
+  // Posicao onde comecam os digitos, inicialmente zero
+  size_t ini=0;
+  // Leva em conta o sinal
+  bool IsNeg = false;
+
+  if (S[0]=='+' || S[0]=='-')
+  {
+    // Se nao tem nenhum digito alem do sinal, emite erro e permanece com valor inicial
+    if (S.size()==1)
+    {
+      cerr << "sign-only string cannot create a BigInt\n";
+      return;
+    }
+    IsNeg = (S[0]=='-');
+    ++ini;
+  }
+
+  // Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
+  /* ACRESCENTAR */
+
+  // Calculo dos digitos do BigInt
+  for (int i=0; i<size(); ++i)
+  {
+    const char& c = S[S.size()-1-i]; // Referencia (apelido) para facilitar a notacao
+    if (!isdigit(c))
+    {
+      *this = BigInt(); // = 0
+      cerr << "string with invalid character cannot create a BigInt\n";
+      return;
+    }
+    d[i] = static_cast<int8_t>(c-'0');
+  }
+  // Corrige eventuais numeros fora da especificacao
+  correct();
+}
+
+/// ******************
+/// * FIM DA PARTE 2 *
+/// ******************

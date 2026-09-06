@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1788703226 source:c:\users\user\desktop\bigint\bigint.cpp
+	"header/bigint.h"
+	<cmath>
+	<string>
+	<iostream>
+
+1788700273 c:\users\user\desktop\bigint\header\bigint.h
+	<cstdint>
+	<string>
+
+1788651412 source:c:\users\user\desktop\bigint\teste1.cpp
+	<iostream>
+	<limits>
+	"header/bigint.h"
+
