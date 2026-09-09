@@ -5,6 +5,8 @@
 	<string>
 	<iostream>
 
+1788700273 
+
 1788700273 c:\users\user\desktop\bigint\header\bigint.h
 	<cstdint>
 	<string>
@@ -13,4 +15,20 @@
 	<iostream>
 	<limits>
 	"header/bigint.h"
+
+1788651412 gint.h"
+
+1788981769 source:/home/alex/Downloads/BigIntPAproject-main/teste2.cpp
+	<iostream>
+	"header/bigint.h"
+
+1788981854 /home/alex/Downloads/BigIntPAproject-main/header/bigint.h
+	<cstdint>
+	<string>
+
+1788981991 source:/home/alex/Downloads/BigIntPAproject-main/bigint.cpp
+	"header/bigint.h"
+	<cmath>
+	<string>
+	<iostream>
 

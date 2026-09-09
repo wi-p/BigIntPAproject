@@ -11,7 +11,7 @@ class BigInt {
         int8_t *d;
 
         BigInt(bool, int);
-        correct();
+        void correct();
 
     public:
         BigInt(); //construtor default
@@ -19,11 +19,14 @@ class BigInt {
         BigInt(long long int); // conversor long long int --> BigInt
         BigInt(const BigInt&); // construtor por copia (B = A)
         BigInt(BigInt&&) noexcept; // construtor por movimento (B = A + C)
+        BigInt(const std::string&);
 
         BigInt& operator=(const BigInt&); // operador atr. copia
         const BigInt& operator=(BigInt&& B) noexcept; // atribuicao movimento
         //const BigInt& operator=(BigInt&& B) noexcept; // operador atr. movimento
         int operator[](int i) const {return (i >= size() || i < 0? 0: int(d[i]));}
+
+        friend operator std::ostream operator<<(std::ostream&, const BigInt &);
 
         /// funcoes de consulta (inline)
         bool isNeg() const {return neg;}

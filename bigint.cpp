@@ -136,7 +136,7 @@ long long int BigInt::toInt() {
 /// ******************
 
 /// Funcao privada que corrige o numero, caso haja inconsistencias
-BigInt::correct() {
+void BigInt::correct() {
     int newSize = size();
 
     while (newSize > 1 && d[newSize - 1] == 0) newSize -= 1;
@@ -181,6 +181,8 @@ BigInt::BigInt(const string& S)
 
   // Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
   /* ACRESCENTAR */
+  neg = IsNeg;
+  nDig = S.size() - ini;
 
   // Calculo dos digitos do BigInt
   for (int i=0; i<size(); ++i)
@@ -201,3 +203,75 @@ BigInt::BigInt(const string& S)
 /// ******************
 /// * FIM DA PARTE 2 *
 /// ******************
+
+/// Insercao (impressao)
+std::ostream& operator<<(std::ostream& O, const BigInt &B) {
+    O << (B.isNeg() == true? '-': '');
+
+    for (int i = B.size() - 1; i >= 0 ; --i) {
+        O << (B[i] >= 0 || B[i] <= 9? B[i]: '#');
+    }
+}
+
+/// Extracao (digitacao).
+/// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
+/// PODE (E PRECISA) RECEBER ACRESCIMOS NAS PARTES INDICADAS POR /* ACRESCENTAR */
+std::istream& operator>>(istream& I, BigInt& B)
+{
+  // Valor inicial zero
+  B = BigInt(); // = 0
+
+  // Testa a stream de entrada e descarta eventuais separadores iniciais.
+  // Em caso de erro, encerra a digitacao.
+  istream::sentry s(I);
+  if (!s) return I;
+
+  // Inspeciona o primeiro caractere que serah lido
+  char c = I.peek();
+
+  // Testa se o primeiro caractere eh um sinal.
+  // Se for, consome (elimina do buffer), processa e inspeciona o proximo caractere.
+  if (c=='+' || c=='-')
+  {
+    // Consome da stream
+    I.get(c);  // Valor de "c" permanece o mesmo...
+    // Atribui o sinal
+    B.neg = (c=='-');
+    // Obtem o proximo caractere
+    c = I.peek();
+  }
+
+  // Numero de digitos que foram digitados
+  int numDigitos = 0;
+
+  // Testa se eh um caractere valido: digitos 0 a 9
+  while (isdigit(c))
+  {
+    // Consome da stream
+    I.get(c);  // Valor de "c" permanece o mesmo...
+    ++numDigitos;
+
+    if (numDigitos>1)
+    {
+      // Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
+      // avancando todos para uma posicao mais significativa aa frente.
+      B.nDig = B.size() + 1;
+    }
+
+    // Acrescenta o novo digito como sendo o primeiro (o menos significativo)
+    B.d[0] = static_cast<int8_t>(c-'0');
+
+    // Inspeciona o proximo caractere que vai ser lido
+    c = I.peek();
+  }
+
+  // Assinala erro na stream se nenhum digito foi lido
+  if (numDigitos==0) I.setstate(ios::failbit);
+
+  // Corrige eventuais erros na digitacao
+  B.correct();
+
+  // Encerra a digitacao
+  return I;
+}
+
