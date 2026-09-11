@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+#include <iostream>
 
 class BigInt {
     private:
@@ -26,7 +27,8 @@ class BigInt {
         //const BigInt& operator=(BigInt&& B) noexcept; // operador atr. movimento
         int operator[](int i) const {return (i >= size() || i < 0? 0: int(d[i]));}
 
-        friend operator std::ostream operator<<(std::ostream&, const BigInt &);
+        friend std::ostream &operator<<(std::ostream&, const BigInt &);
+        friend std::istream &operator>>(std::istream& I, BigInt& B);
 
         /// funcoes de consulta (inline)
         bool isNeg() const {return neg;}

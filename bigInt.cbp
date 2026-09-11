@@ -34,8 +34,9 @@
 		</Compiler>
 		<Unit filename="axuiliar.txt" />
 		<Unit filename="bigint.cpp" />
+		<Unit filename="bigint.h" />
 		<Unit filename="header/bigint.h" />
-		<Unit filename="teste2.cpp" />
+		<Unit filename="teste3.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

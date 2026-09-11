@@ -18,17 +18,28 @@
 
 1788651412 gint.h"
 
-1788981769 source:/home/alex/Downloads/BigIntPAproject-main/teste2.cpp
+1789150916 source:/home/alex/Downloads/BigIntPAproject-main/teste2.cpp
 	<iostream>
-	"header/bigint.h"
+	"bigint.h"
 
 1788981854 /home/alex/Downloads/BigIntPAproject-main/header/bigint.h
 	<cstdint>
 	<string>
 
-1788981991 source:/home/alex/Downloads/BigIntPAproject-main/bigint.cpp
-	"header/bigint.h"
+1789153885 source:/home/alex/Downloads/BigIntPAproject-main/bigint.cpp
+	"bigint.h"
 	<cmath>
 	<string>
 	<iostream>
+	<cctype>
+
+1789151784 /home/alex/Downloads/BigIntPAproject-main/bigint.h
+	<cstdint>
+	<string>
+	<iostream>
+
+1788984227 source:/home/alex/Downloads/BigIntPAproject-main/teste3.cpp
+	<iostream>
+	<limits>
+	"bigint.h"
 

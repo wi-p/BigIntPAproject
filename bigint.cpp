@@ -1,12 +1,14 @@
-#include "header/bigint.h"
+#include "bigint.h"
 #include <cmath>
 #include <string>
 #include <iostream>
+#include <cctype>
 /* ACRESCENTAR */
 /*
 PAREI EM:
- Um construtor que cria um BigInt a partir de
-uma string.
+ // Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
+      // avancando todos para uma posicao mais significativa aa frente.
+      //B.nDig = B.size() + 1;
 */
 
 
@@ -181,8 +183,8 @@ BigInt::BigInt(const string& S)
 
   // Faz ter sinal (IsNeg) e numero de digitos (tamanho da string - ini) corretos
   /* ACRESCENTAR */
-  neg = IsNeg;
-  nDig = S.size() - ini;
+
+  *this = BigInt(IsNeg, S.size() - ini);
 
   // Calculo dos digitos do BigInt
   for (int i=0; i<size(); ++i)
@@ -205,18 +207,20 @@ BigInt::BigInt(const string& S)
 /// ******************
 
 /// Insercao (impressao)
-std::ostream& operator<<(std::ostream& O, const BigInt &B) {
-    O << (B.isNeg() == true? '-': '');
+ostream& operator<<(ostream &O, const BigInt &B) {
+    if (B.isNeg()) O << '-';
 
     for (int i = B.size() - 1; i >= 0 ; --i) {
-        O << (B[i] >= 0 || B[i] <= 9? B[i]: '#');
+        O << isdigit(B[i])? B[i]: '#';
     }
+
+    return O;
 }
 
 /// Extracao (digitacao).
 /// NAO PODE SER MODIFICADO NAS PARTES JAH IMPLEMENTADAS.
 /// PODE (E PRECISA) RECEBER ACRESCIMOS NAS PARTES INDICADAS POR /* ACRESCENTAR */
-std::istream& operator>>(istream& I, BigInt& B)
+istream& operator>>(istream& I, BigInt& B)
 {
   // Valor inicial zero
   B = BigInt(); // = 0
@@ -255,7 +259,8 @@ std::istream& operator>>(istream& I, BigInt& B)
     {
       // Faz o BigInt manter o sinal e passar a ter size()+1 digitos,
       // avancando todos para uma posicao mais significativa aa frente.
-      B.nDig = B.size() + 1;
+      //B.nDig = B.size() + 1;
+      B = BigInt(B.isNeg(), B.size() + 1);
     }
 
     // Acrescenta o novo digito como sendo o primeiro (o menos significativo)

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "header/bigint.h"
+#include "bigint.h"
 
 using namespace std;
 
