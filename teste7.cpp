@@ -75,7 +75,7 @@ int main(void)
   // Testando que o construtor a partir de string nao eh conversor
   cout << "\nI04: Deve gerar um erro de compilacao.\n";
   cout << "O programa soh deve compilar se voce comentar a proxima linha.\n";
-  A = B * string("1000");
+  // A = B * string("1000");
 
   return 0;
 }

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <limits>
-#include "header/bigint.h"
+#include "bigint.h"
 
 using namespace std;
 
@@ -37,7 +37,8 @@ BigInt inicializa()
 int main(void)
 {
   // Testando o construtor default;
-
+    BigInt b(0);
+    imprimir("b", b);
   cout << "==========\n";
   BigInt P0;
   // deve imprimir 0

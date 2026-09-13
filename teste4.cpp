@@ -95,7 +95,7 @@ int main(void)
   BigInt BS(S);
   cout << "Soh deve compilar se comentar a proxima linha\n";
   // Tentativa de usar o conversor implicito de string para BigInt
-  if (BS == S) cerr << "Nao deveria compilar essa linha, que contem erro\n";
+  //if (BS == S) cerr << "Nao deveria compilar essa linha, que contem erro\n";
 
   return 0;
 }
