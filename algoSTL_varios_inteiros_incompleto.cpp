@@ -85,19 +85,18 @@ int main()
   //falta_fazer();
   N = count_if(VI.begin(), VI.end(), [N1, N2](int v) { return (N1 < v && v < N2);});
   cout << "Existem " << N << " numeros na faixa [" << N1 << ',' << N2 << "] no conteiner\n";
-  /*
-  // 
-
-  
 
   // Procura e imprime todos os numeros dentro de uma faixa: N1 a N2
-  cout << "Todos os numeros na faixa [" << N1 << ',' << N2 << "] no conteiner sao:";
-  falta_fazer();
-  cout << endl;
-
+  //cout << "Todos os numeros na faixa [" << N1 << ',' << N2 << "] no conteiner sao:";
+  // fazer
+  //cout << endl;
+  
+  
   // Procura e imprime o menor numero do conteiner
   // Lembrar que o conteiner nao estah ordenado
-  falta_fazer();
+  sort(VI.begin(), VI.end());
+  iter = VI.begin();
+    
   if (iter==VI.end())
   {
     cout << "O conteiner nao contem nenhum numero!\n";
@@ -106,22 +105,34 @@ int main()
   {
     cout << "O menor numero do conteiner eh " << *iter << endl;
   }
-
+  
+  cout << "\n\n";
+  cout << "O vetor ordenado eh: ";
+  
+  for_each(VI.begin(), VI.end(), [](int v){cout << v << ' ';});
+  
+  cout << "\n";
   // Ordena o conteiner em ordem crescente, usando <
-  falta_fazer();
+  //falta_fazer();
 
   // Remove os elementos repetidos
-  falta_fazer();
-
+  iter = unique(VI.begin(), VI.end()); // move todos os valores repetidos p/ o final
+  if (iter != VI.end()) VI.erase(iter, VI.end()); // verifica se final mudou e limpa
+  
   // Imprime o numero de inteiros no conteiner apos remocao
   cout << "O tamanho do conteiner eh " << VI.size() << endl;
-
+  
+  cout << "Os valores sao: ";
+  for_each(VI.begin(), VI.end(), [](int v){cout << v << ' ';});
+  cout << "\n";
+  
   // Imprime o maior numero do conteiner
   // Lembrar que o conteiner estah ordenado
-  cout << "O maior numero do conteiner eh " << falta_fazer() << endl;
-
+  cout << "O maior numero do conteiner eh " << VI.back() << endl;
+  
   // Procura e imprime o primeiro numero que seja primo
-  falta_fazer();
+  iter = find_if(VI.begin(), VI.end(), eh_primo);
+  
   if (iter==VI.end())
   {
     cout << "Nao existe nenhum numero primo no conteiner\n";
@@ -130,12 +141,19 @@ int main()
   {
     cout << "O primeiro numero primo do conteiner eh " << *iter << endl;
   }
-
+  
   // Procura e imprime todos os numeros primos
   cout << "Todos os numeros primos no conteiner sao:";
-  falta_fazer();
+  iter = VI.begin();
+  
+  while (iter != VI.end()) {
+  	iter = find_if(iter, VI.end(), eh_primo);
+  	if (iter != VI.end()) {
+	  cout << *iter << " ";
+  	  ++iter; // aponta para o proximo
+    }
+  }
   cout << endl;
-*/
+
   return 0;
 }
-
